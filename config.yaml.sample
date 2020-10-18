@@ -1,0 +1,10 @@
+---
+smtp:
+  server: smtp.hostname.tld
+  user: username
+  password: password
+email:
+  from: address@hostname.tld
+  to:
+    - secondaddress@hostname.tld
+    - thirdaddress@hostname.tld
