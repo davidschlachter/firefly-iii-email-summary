@@ -60,12 +60,12 @@ def main():
 		tableBody = '<table><tr><th>Category</th><th>Total</th></tr>'
 		for category in totals:
 			#tableBody += '<tr><td>'+category['name']+'</td><td>'+str(round(float(category['spent'])))+'</td><td>'+str(round(float(category['earned'])))+'</td><td>'+str(round(float(category['total'])))+'</td></tr>'
-			tableBody += '<tr><td>'+category['name']+'</td><td>'+str(round(float(category['total'])))+'</td></tr>'
+			tableBody += '<tr><td>'+category['name']+'</td><td>'+str(round(float(category['total']))).replace("-", "−")+'</td></tr>'
 		tableBody += '</table>'
 		htmlBody = """
 		<html>
 			<head>
-				<style>table{{border-collapse: collapse; border-top: 1px solid black; border-bottom: 1px solid black;}}td{{padding: .33em;}}</style>
+				<style>table{{border-collapse: collapse; border-top: 1px solid black; border-bottom: 1px solid black;}} th {{border-bottom: 1px solid black; padding: 0.33em 1em 0.33em 1em;}} td{{padding: .1em;}} tr:nth-child(even) {{background: #EEE}} tr:nth-child(odd) {{background: #FFF}} tr td:first-child {{padding-right: 1em;}} tr td:last-child, tr th:last-child {{text-align: right;}}</style>
 			</head>
 			<body>
 				<p>Monthly categories report for {start} to {end}:</p>
