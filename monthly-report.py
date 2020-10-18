@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3.7
 
 import yaml
+import sys
 import traceback
 import datetime
 import requests
@@ -20,6 +21,7 @@ def main():
 		except:
 			traceback.print_exc()
 			print("ERROR: could not load config.yaml")
+			sys.exit(1)
 	#
 	# Datermine the applicable date range: the previous month
 	today = datetime.date.today()
