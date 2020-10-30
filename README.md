@@ -8,7 +8,6 @@ Usage: run 'monthly-report.py' on the command line (e.g. with cron) to send the 
 
 Known issues:
 
-- SMTP authentication not actually implemented (despite appearing in config.yaml)
 - Only supports a single currency
 
 Screenshot:
