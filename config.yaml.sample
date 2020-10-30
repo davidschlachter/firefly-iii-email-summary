@@ -1,6 +1,9 @@
 ---
 smtp:
   server: smtp.hostname.tld
+  port: 25
+  starttls: False        # Use STARTTLS
+  authentication: False  # Login with (the following) username and password
   user: username
   password: password
 email:

@@ -7,6 +7,7 @@ import datetime
 import requests
 import re
 import bs4
+import ssl
 import smtplib
 
 from email.message import EmailMessage
@@ -110,8 +111,26 @@ def main():
 		msg.set_content(bs4.BeautifulSoup(htmlBody, "html.parser").get_text()) # just html to text
 		msg.add_alternative(htmlBody, subtype='html')
 		#
+		# Set up the SSL context for SMTP if necessary
+		context = ssl.create_default_context()
+		#
 		# Send off the message
-		with smtplib.SMTP(config['smtp']['server']) as s:
+		with smtplib.SMTP(host=config['smtp']['server'], port=config['smtp']['port']) as s:
+			if config['smtp']['starttls']:
+				s.ehlo()
+				try:
+					s.starttls(context=context)
+				except:
+					traceback.print_exc()
+					print("ERROR: could not connect to SMTP server with STARTTLS")
+					sys.exit(2)
+			if config['smtp']['authentication']:
+				try:
+					s.login(user=config['smtp']['user'], password=config['smtp']['password'])
+				except:
+					traceback.print_exc()
+					print("ERROR: could not authenticate with SMTP server.")
+					sys.exit(3)
 			s.send_message(msg)
 
 if __name__ == "__main__":
