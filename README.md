@@ -10,6 +10,14 @@ Known issues:
 
 - Only supports a single currency
 
+Installation:
+
+Install the dependencies from `requirements.txt`. 
+
+```
+pip install -r requirements.txt
+```
+
 Screenshot:
 
 ![Firefly-iii monthly report screenshot](screenshot.png?raw=true)
