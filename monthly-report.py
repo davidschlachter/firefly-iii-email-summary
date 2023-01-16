@@ -58,11 +58,9 @@ def main():
 			totals.append( {'name': categoryName, 'spent': categorySpent, 'earned': categoryEarned, 'total': categoryTotal} )
 		#
 		# Get general information
+		currencyName = config['currency']
 		monthSummary = s.get(config['firefly-url'] + '/api/v1/summary/basic' + '?start=' + startDate.strftime('%Y-%m-%d') + '&end=' + endDate.strftime('%Y-%m-%d')).json()
 		yearToDateSummary = s.get(config['firefly-url'] + '/api/v1/summary/basic' + '?start=' + startDate.strftime('%Y') + '-01-01' + '&end=' + endDate.strftime('%Y-%m-%d')).json()
-		for key in monthSummary:
-			if re.match(r'spent-in-.*', key):
-				currencyName = key.replace("spent-in-", "")
 		spentThisMonth     = float(monthSummary['spent-in-'+currencyName]['monetary_value'])
 		earnedThisMonth    = float(monthSummary['earned-in-'+currencyName]['monetary_value'])
 		netChangeThisMonth = float(monthSummary['balance-in-'+currencyName]['monetary_value'])
