@@ -25,7 +25,7 @@ def main():
 			print("ERROR: could not load config.yaml")
 			sys.exit(1)
 	#
-	# Datermine the applicable date range: the previous month
+	# Determine the applicable date range: the previous month
 	today = datetime.date.today()
 	endDate = today.replace(day=1) - datetime.timedelta(days=1)
 	startDate = endDate.replace(day=1)
