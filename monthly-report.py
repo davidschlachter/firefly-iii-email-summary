@@ -63,13 +63,13 @@ def main():
 		for key in monthSummary:
 			if re.match(r'spent-in-.*', key):
 				currencyName = key.replace("spent-in-", "")
-		spentThisMonth     = monthSummary['spent-in-'+currencyName]['monetary_value']
-		earnedThisMonth    = monthSummary['earned-in-'+currencyName]['monetary_value']
-		netChangeThisMonth = monthSummary['balance-in-'+currencyName]['monetary_value']
-		spentThisYear      = yearToDateSummary['spent-in-'+currencyName]['monetary_value']
-		earnedThisYear     = yearToDateSummary['earned-in-'+currencyName]['monetary_value']
-		netChangeThisYear  = yearToDateSummary['balance-in-'+currencyName]['monetary_value']
-		netWorth           = yearToDateSummary['net-worth-in-'+currencyName]['monetary_value']
+		spentThisMonth     = float(monthSummary['spent-in-'+currencyName]['monetary_value'])
+		earnedThisMonth    = float(monthSummary['earned-in-'+currencyName]['monetary_value'])
+		netChangeThisMonth = float(monthSummary['balance-in-'+currencyName]['monetary_value'])
+		spentThisYear      = float(yearToDateSummary['spent-in-'+currencyName]['monetary_value'])
+		earnedThisYear     = float(yearToDateSummary['earned-in-'+currencyName]['monetary_value'])
+		netChangeThisYear  = float(yearToDateSummary['balance-in-'+currencyName]['monetary_value'])
+		netWorth           = float(yearToDateSummary['net-worth-in-'+currencyName]['monetary_value'])
 		#
 		# Set up the categories table
 		categoriesTableBody = '<table><tr><th>Category</th><th style="text-align: right;">Total</th></tr>'
