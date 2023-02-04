@@ -25,7 +25,7 @@ def main():
 			print("ERROR: could not load config.yaml")
 			sys.exit(1)
 	#
-	# Datermine the applicable date range: the previous month
+	# Determine the applicable date range: the previous month
 	today = datetime.date.today()
 	endDate = today.replace(day=1) - datetime.timedelta(days=1)
 	startDate = endDate.replace(day=1)
@@ -60,16 +60,20 @@ def main():
 		# Get general information
 		monthSummary = s.get(config['firefly-url'] + '/api/v1/summary/basic' + '?start=' + startDate.strftime('%Y-%m-%d') + '&end=' + endDate.strftime('%Y-%m-%d')).json()
 		yearToDateSummary = s.get(config['firefly-url'] + '/api/v1/summary/basic' + '?start=' + startDate.strftime('%Y') + '-01-01' + '&end=' + endDate.strftime('%Y-%m-%d')).json()
-		for key in monthSummary:
-			if re.match(r'spent-in-.*', key):
-				currencyName = key.replace("spent-in-", "")
-		spentThisMonth     = monthSummary['spent-in-'+currencyName]['monetary_value']
-		earnedThisMonth    = monthSummary['earned-in-'+currencyName]['monetary_value']
-		netChangeThisMonth = monthSummary['balance-in-'+currencyName]['monetary_value']
-		spentThisYear      = yearToDateSummary['spent-in-'+currencyName]['monetary_value']
-		earnedThisYear     = yearToDateSummary['earned-in-'+currencyName]['monetary_value']
-		netChangeThisYear  = yearToDateSummary['balance-in-'+currencyName]['monetary_value']
-		netWorth           = yearToDateSummary['net-worth-in-'+currencyName]['monetary_value']
+		currency = config.get('currency', None)
+		if currency:
+			currencyName = currency
+		else:
+			for key in monthSummary:
+				if re.match(r'spent-in-.*', key):
+					currencyName = key.replace("spent-in-", "")
+		spentThisMonth     = float(monthSummary['spent-in-'+currencyName]['monetary_value'])
+		earnedThisMonth    = float(monthSummary['earned-in-'+currencyName]['monetary_value'])
+		netChangeThisMonth = float(monthSummary['balance-in-'+currencyName]['monetary_value'])
+		spentThisYear      = float(yearToDateSummary['spent-in-'+currencyName]['monetary_value'])
+		earnedThisYear     = float(yearToDateSummary['earned-in-'+currencyName]['monetary_value'])
+		netChangeThisYear  = float(yearToDateSummary['balance-in-'+currencyName]['monetary_value'])
+		netWorth           = float(yearToDateSummary['net-worth-in-'+currencyName]['monetary_value'])
 		#
 		# Set up the categories table
 		categoriesTableBody = '<table><tr><th>Category</th><th style="text-align: right;">Total</th></tr>'

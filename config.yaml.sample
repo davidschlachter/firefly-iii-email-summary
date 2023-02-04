@@ -13,3 +13,4 @@ email:
     - thirdaddress@hostname.tld
 firefly-url: 'https://firefly.hostname.tld'
 accesstoken: 'verylongstringfromfireflysettings'
+# currency: 'USD'
