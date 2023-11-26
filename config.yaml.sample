@@ -13,4 +13,4 @@ email:
     - thirdaddress@hostname.tld
 firefly-url: 'https://firefly.hostname.tld'
 accesstoken: 'verylongstringfromfireflysettings'
-currency: '£'
+# currency: 'GBP'       # Filter by currency, leave it as it is if you don't want this feature 
