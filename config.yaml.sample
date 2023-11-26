@@ -2,8 +2,8 @@
 smtp:
   server: smtp.hostname.tld
   port: 25
-  starttls: False        # Use STARTTLS
-  authentication: False  # Login with (the following) username and password
+  starttls: True        # Use STARTTLS
+  authentication: True  # Login with (the following) username and password
   user: username
   password: password
 email:
@@ -13,4 +13,4 @@ email:
     - thirdaddress@hostname.tld
 firefly-url: 'https://firefly.hostname.tld'
 accesstoken: 'verylongstringfromfireflysettings'
-# currency: 'USD'
+currency: '£'
