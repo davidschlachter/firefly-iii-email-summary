@@ -157,7 +157,6 @@ def main():
         generalTableBody += '</table>'
         #
         # Get transaction in a budget, group by category + sorted descending
-        #o functie care in momentul cand ii pasezi un buget  afla ce index este culege toate tranzactiile, verifica daca mai sunt pagini si posteaza suma per categorie 
         def getCategories(budget):
             index = 1
             pageNumber = 1
