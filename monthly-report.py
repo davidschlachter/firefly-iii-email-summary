@@ -79,10 +79,12 @@ def main():
                 budgetIndex) + '/limits?start=' + startDate.strftime('%Y-%m-%d') + endDate.strftime('%Y-%m-%d')
             budgetsSpentCategories = s.get(budgetsSpentUrl).json()
             # Get the spent for the current budget
-            spent = budgetsSpentCategories['data'][0]['attributes']['spent']
-            # Update the 'spent' value for the current budget item
-            budgets[budgetIndex - 1]['spent'] = round(abs(float(spent)), 2)
-            # Increment budgetIndex for the next iteration
+            # Check is data is non-empty
+            if len(budgetsSpentCategories['data']) > 0:
+                spent = budgetsSpentCategories['data'][0]['attributes']['spent']
+                # Update the 'spent' value for the current budget item
+                budgets[budgetIndex - 1]['spent'] = round(abs(float(spent)), 2)
+                # Increment budgetIndex for the next iteration
             budgetIndex += 1
         #
         # Get general information
