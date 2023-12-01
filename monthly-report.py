@@ -93,6 +93,7 @@ def main():
         yearToDateSummary = s.get(config['firefly-url'] + '/api/v1/summary/basic' + '?start=' +
                                   startDate.strftime('%Y') + '-01-01' + '&end=' + endDate.strftime('%Y-%m-%d')).json()
         currency = config.get('currency', None)
+        currencySymbol = config.get('currencySymbol', None)
         if currency:
             currencyName = currency
         else:
@@ -172,7 +173,7 @@ def main():
             #            
             # Get all the transactions grouped by category in this budget
             while True:
-                budgetsCategoryUrl = config['firefly-url'] + f'/api/v1/budgets/{index}/limits/{index}/transactions?limit=50&page={pageNumber}'
+                budgetsCategoryUrl = config['firefly-url'] + f'/api/v1/budgets/{index}/limits/{index}/transactions?limit=50&page={pageNumber}' + '&start=' + startDate.strftime('%Y-%m-%d') + '&end=' + endDate.strftime('%Y-%m-%d')
                 transactionCategories = s.get(budgetsCategoryUrl).json()
                 #
                 # Get transactions from current page
@@ -202,13 +203,13 @@ def main():
             html_result = '<p style="margin-top: 10px">'
             html_result += 'Categories: <br />'
             for category, total_spent in sorted_sums.items():
-                html_result += f'- {category}: {total_spent:.2f} <br />'
+                html_result += f"- {category}: {currencySymbol}{total_spent:.2f} <br />"
+
             html_result += '</p>'
             
             return html_result
         #
         # Display budgeting zone
-        displayBudgeting = 0
         goodBudgeting = '''   
         <div
                     class="loading-bar-2"
@@ -254,9 +255,9 @@ def main():
                         </div>
                     </div>
                     </div>
-                    <p style="margin-top: 10px">Budget size: {budgetPlanned}</p>
-                    <p style="margin-top: 10px">Paid: {spent}</p>
-                    <p style="margin-top: 10px">Saved: {saved}</p>
+                    <p style="margin-top: 10px">Budget size: {currencySymbol}{budgetPlanned}</p>
+                    <p style="margin-top: 10px">Paid: {currencySymbol}{spent}</p>
+                    <p style="margin-top: 10px">Saved: {currencySymbol}{saved}</p>
                     <div class="budget-message respected">
                     <p>Your Budget is being Respectfully Managed! 🌟</p>
                     </div>
@@ -305,8 +306,8 @@ def main():
                         >
                     </div>
                     </div>
-                    <p style="margin-top: 10px">Budget size: {budgetPlanned}</p>
-                    <p style="margin-top: 10px">Paid: {spent}</p>
+                    <p style="margin-top: 10px">Budget size: {currencySymbol}{budgetPlanned}</p>
+                    <p style="margin-top: 10px">Paid: {currencySymbol}{spent}</p>
                     <div class="budget-message overspent">
                     <p>Oops! Some Overspending Detected! 😅</p>
                     <p style="margin-top: 10px">
@@ -319,10 +320,10 @@ def main():
         budgetsMonthlyList = ''
         for budget in budgets:
             if float(budget['budgeted']) > float(budget['spent']):
-                budgetsMonthlyList += goodBudgeting.format(budgetName=budget['name'], budgetPlanned=round(float(budget['budgeted'])), spent=round(float(budget['spent'])), saved=round(
+                budgetsMonthlyList += goodBudgeting.format(budgetName=budget['name'], currencySymbol=currencySymbol, budgetPlanned=round(float(budget['budgeted'])), spent=round(float(budget['spent'])), saved=round(
                     float(budget['budgeted'])) - round(float(budget['spent'])), percentage=round((round(float(budget['spent'])) / round(float(budget['budgeted']))) * 100)) # type: ignore
             else:
-                budgetsMonthlyList += badBudgeting.format(budgetName=budget['name'], budgetPlanned=round(float(budget['budgeted'])), overspentCategories=getCategories(budget['name']),spent=round(
+                budgetsMonthlyList += badBudgeting.format(budgetName=budget['name'], currencySymbol=currencySymbol, budgetPlanned=round(float(budget['budgeted'])), overspentCategories=getCategories(budget['name']),spent=round(
                     float(budget['spent'])), percentage=round((round(float(budget['spent'])) / round(float(budget['budgeted']))) * 100)) # type: ignore
         #
         # Assemble the email
@@ -431,10 +432,10 @@ def main():
                         </div>
                     </div>
                     </div>
-                    <p style="margin-top: 10px">Earned: {earnedThisMonth}</p>
-                    <p style="margin-top: 10px">Total budgeted: {totalBudgetsAmount}</p>
-                    <p style="margin-top: 10px">Paid: {spentThisMonth}</p>
-                    <p style="margin-top: 10px">Saved: {savedThisMonth} or {savedPercentage}%</p>
+                    <p style="margin-top: 10px">Earned: {currencySymbol}{earnedThisMonth}</p>
+                    <p style="margin-top: 10px">Total budgeted: {currencySymbol}{totalBudgetsAmount}</p>
+                    <p style="margin-top: 10px">Paid: {currencySymbol}{spentThisMonth}</p>
+                    <p style="margin-top: 10px">Saved: {currencySymbol}{savedThisMonth} or {savedPercentage}%</p>
                     <div class="budget-message general-info">
                     <p>🌈 "Financial freedom is the new rich." - Unknown 🌟</p>
                     </div>
@@ -447,7 +448,7 @@ def main():
             </table>
         </body>
         </html>
-		""".format(monthName=monthName, year=startDate.strftime("%Y"), totalBudgetsAmount=totalBudgetsAmount, budgetsMonthlylList=budgetsMonthlyList, spendPercentage=spendPercentage, savedPercentage=savedPercentage, savedThisMonth=savedThisMonth, spentThisMonth=round(spentThisMonth), earnedThisMonth=round(earnedThisMonth))
+		""".format(monthName=monthName, year=startDate.strftime("%Y"), currencySymbol=currencySymbol, totalBudgetsAmount=totalBudgetsAmount, budgetsMonthlylList=budgetsMonthlyList, spendPercentage=spendPercentage, savedPercentage=savedPercentage, savedThisMonth=savedThisMonth, spentThisMonth=round(spentThisMonth), earnedThisMonth=round(earnedThisMonth))
         msg.set_content(bs4.BeautifulSoup(
             htmlBody, "html.parser").get_text())  # just html to text
         msg.add_alternative(htmlBody, subtype='html')
