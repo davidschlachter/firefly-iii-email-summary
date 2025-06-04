@@ -32,7 +32,10 @@ def main():
 	monthName = startDate.strftime("%B")
 	#
 	# Set us up for API requests
-	HEADERS = {'Authorization': 'Bearer {}'.format(config['accesstoken'])}
+	HEADERS = {
+    		'Authorization': 'Bearer {}'.format(config['accesstoken']),
+    		'Accept': 'application/json'
+	}
 	with requests.Session() as s:
 		s.headers.update(HEADERS)
 		#
